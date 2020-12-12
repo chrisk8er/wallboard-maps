@@ -1,0 +1,20 @@
+html,
+body,
+#root {
+  min-height: 100vh;
+}
+
+// fixing reach router breaking the css when tried to set full height
+div[tabindex] {
+  height: inherit;
+}
+
+.MarqueeContent {
+  word-break: normal;
+  white-space: nowrap;
+}
+
+.slick-track {
+  margin-left: unset !important;
+  margin-right: auto;
+}
