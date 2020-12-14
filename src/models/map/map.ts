@@ -14,6 +14,7 @@ export const MapModel = types
   .props({
     provinceId: types.optional(types.number, 31),
     regencyId: types.optional(types.number, 31),
+    provinceGeojson: types.optional(types.string, ''),
   })
   .extend(withEnvironment)
   .actions((self) => {
@@ -26,8 +27,8 @@ export const MapModel = types
       self.regencyId = id
     }
 
-    const saveGeojsonProvince = (result: GeoJSON.FeatureCollection) => {
-      console.log(result)
+    const setGeojsonProvince = (result: GeoJSON.FeatureCollection) => {
+      self.provinceGeojson = JSON.stringify(result)
     }
 
     const getGeojsonProvince = flow(function* () {
@@ -36,7 +37,7 @@ export const MapModel = types
       )
 
       if (result.kind === 'ok') {
-        saveGeojsonProvince(result.geojsonProvince)
+        setGeojsonProvince(result.geojsonProvince)
       } else {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
           console.tron?.log && console.tron.log(result.kind)
@@ -48,10 +49,15 @@ export const MapModel = types
     return {
       setProvinceId,
       setRegencyId,
-      saveGeojsonProvince,
+      setGeojsonProvince,
       getGeojsonProvince,
     }
   })
+  .views((self) => ({
+    getProvinceMap(): GeoJSON.FeatureCollection {
+      return JSON.parse(self.provinceGeojson)
+    },
+  }))
 
 type MapType = Instance<typeof MapModel>
 export interface MapStore extends MapType {}

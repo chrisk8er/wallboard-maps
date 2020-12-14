@@ -54,7 +54,7 @@ export default function TicketActivity() {
   return (
     <Card className={classes.root} elevation={2}>
       <CardHeader
-        title="Ticket Active"
+        title="Ticket by Category"
         titleTypographyProps={{ variant: 'subtitle1' }}
       />
       <CardContent>

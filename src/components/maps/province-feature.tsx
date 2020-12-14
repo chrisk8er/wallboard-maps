@@ -11,6 +11,7 @@ export function ProvinceFeature({ data }: ProvinceFeatureProps) {
   const map = useMap()
 
   useEffect(() => {
+    // focus on the shape
     const featureBounds: LatLngBoundsExpression = featureRef.current?.getBounds() as LatLngBoundsExpression
     map.fitBounds(featureBounds)
   }, [map])

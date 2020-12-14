@@ -7,6 +7,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 // Components
 import TicketStatus from 'components/ticket-status'
 import TicketActive from 'components/ticket-activity'
+import ProvinceCardStatus from 'components/province-status'
 
 const useStyles = makeStyles(
   (theme: Theme) =>
@@ -41,10 +42,7 @@ export default function Sidebar({ expand }: SidebarProps) {
       flexDirection="column"
     >
       <Box pb={2}>
-        <TicketStatus />
-      </Box>
-      <Box pb={2}>
-        <TicketStatus />
+        <ProvinceCardStatus />
       </Box>
       <Box pb={2} flexGrow={1}>
         <TicketActive />

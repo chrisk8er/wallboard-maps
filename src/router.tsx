@@ -6,7 +6,7 @@ import WallboardMaps from 'layouts/Maps'
 import { MapsView } from 'views/maps'
 import { inject, observer } from 'mobx-react'
 
-let Home = (props: RouteComponentProps) => <div>version 2.0</div>
+let Home = (props: RouteComponentProps) => <div>Wallboard Version 2.0</div>
 
 // function RouterComponent({
 //   children,

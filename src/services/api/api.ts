@@ -104,7 +104,6 @@ export class Api {
   }
 
   async getProvince(id: number): Promise<Types.GetGeojsonProvinceResult> {
-    console.log(this.apisauce)
     if (this.apisauce) {
       // make the api call
       const response: ApiResponse<any> = await this.apisauce.get(

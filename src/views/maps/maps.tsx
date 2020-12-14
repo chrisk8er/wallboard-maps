@@ -19,16 +19,6 @@ import Sidebar from 'components/sidebar'
 import { StaticHeader } from 'components/header'
 import { ProvinceFeature, RegencyFeature } from 'components/maps'
 
-// Data
-import bantenProv from 'data/maps/banten.json'
-import bantenReg from 'data/maps/regency.json'
-
-// Api
-// import { Api } from 'services/api'
-
-const batenFeature: GeoJSON.Feature = bantenProv as any
-const batenRegFeature: GeoJSON.FeatureCollection = bantenReg as any
-
 const drawerWidth = 240
 const MapsStyles = (theme: Theme) =>
   createStyles({
@@ -88,21 +78,21 @@ class Maps extends React.Component<MapsProps, MapsState> {
       selectedProvince: 36,
     }
   }
-
   componentDidMount() {
+    // fetching by province id
     const { provinceId, mapStore } = this.props
     if (provinceId && mapStore) mapStore.setProvinceId(parseInt(provinceId))
   }
 
   render() {
-    // const { classes } = this.props
-    // const { expandSidebar } = this.state
+    const { mapStore } = this.props
+    const { expandSidebar } = this.state
 
     return (
       <>
         <StaticHeader />
         <Box display="flex" height="100%">
-          {/* <Sidebar expand={expandSidebar} /> */}
+          <Sidebar expand={expandSidebar} />
           <MapContainer
             style={{ height: '100%', width: '100%' }}
             attributionControl={false}
@@ -119,7 +109,9 @@ class Maps extends React.Component<MapsProps, MapsState> {
 
             <ZoomControl position="bottomright" />
 
-            <ProvinceFeature data={batenFeature} />
+            {mapStore && (
+              <ProvinceFeature data={mapStore.getProvinceMap().features[0]} />
+            )}
             {/* <RegencyFeature data={batenRegFeature} /> */}
           </MapContainer>
         </Box>

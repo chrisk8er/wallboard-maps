@@ -21,7 +21,7 @@ const useStyles = makeStyles(
   { name: 'wallboard' }
 )
 
-interface WallboardMapsProps {}
+// interface WallboardMapsProps {}
 
 export default function Wallboard<WallboardMapsProps>(
   props: React.PropsWithChildren<WallboardMapsProps>
