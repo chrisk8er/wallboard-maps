@@ -88,6 +88,8 @@ class Maps extends React.Component<MapsProps, MapsState> {
     const { mapStore } = this.props
     const { expandSidebar } = this.state
 
+    const provinceFeature = mapStore?.getProvinceMap().features[0]
+
     return (
       <>
         <StaticHeader />
@@ -109,9 +111,7 @@ class Maps extends React.Component<MapsProps, MapsState> {
 
             <ZoomControl position="bottomright" />
 
-            {mapStore && (
-              <ProvinceFeature data={mapStore.getProvinceMap().features[0]} />
-            )}
+            {provinceFeature && <ProvinceFeature data={provinceFeature} />}
             {/* <RegencyFeature data={batenRegFeature} /> */}
           </MapContainer>
         </Box>

@@ -51,7 +51,16 @@ type Properties = {
 export function ProvinceCardStatus({ mapStore }: ProvinceCardStatusProps) {
   const classes = useStyles()
   const properties: Properties = mapStore?.getProvinceMap().features[0]
-    .properties as Properties
+    ?.properties as Properties
+
+  if (!properties)
+    return (
+      <Card className={classes.root} elevation={2}>
+        <CardContent>
+          <Typography variant="subtitle1"></Typography>
+        </CardContent>
+      </Card>
+    )
 
   return (
     <Card className={classes.root} elevation={2}>
