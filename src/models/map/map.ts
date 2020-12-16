@@ -14,7 +14,10 @@ export const MapModel = types
   .props({
     provinceId: types.optional(types.number, 31),
     regencyId: types.optional(types.number, 31),
-    provinceGeojson: types.optional(types.string, ''),
+    provinceGeojson: types.optional(
+      types.string,
+      '{\n  "type": "FeatureCollection",\n  "features": []\n}'
+    ),
   })
   .extend(withEnvironment)
   .actions((self) => {
