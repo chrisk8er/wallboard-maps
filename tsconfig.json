@@ -16,6 +16,7 @@
     "jsx": "react",
     "baseUrl": "src",
     "noImplicitThis": true,
+    // "noImplicitReturns": true,
     "experimentalDecorators": true,
     "types": ["node"]
   },
