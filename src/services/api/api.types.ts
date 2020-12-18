@@ -20,3 +20,7 @@ export type GetUserResult = { kind: 'ok'; user: User } | GeneralApiProblem
 export type GetGeojsonProvinceResult =
   | { kind: 'ok'; geojsonProvince: GeoJSON.FeatureCollection }
   | GeneralApiProblem
+
+export type GetGeojsonRegencyResult =
+  | { kind: 'ok'; geojsonRegency: GeoJSON.FeatureCollection }
+  | GeneralApiProblem

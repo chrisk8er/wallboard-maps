@@ -1,7 +1,7 @@
 import { Instance, SnapshotOut, types } from 'mobx-state-tree'
 
 import { SettingModel } from '../setting'
-import { MapModel } from '../map'
+import { MapModel } from '../map-store'
 
 /**
  * An RootStore model.

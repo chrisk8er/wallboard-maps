@@ -103,6 +103,7 @@ export class Api {
     return { kind: 'unknown', temporary: true }
   }
 
+  // Get Province Data
   async getProvince(id: number): Promise<Types.GetGeojsonProvinceResult> {
     if (this.apisauce) {
       // make the api call
@@ -116,6 +117,25 @@ export class Api {
         if (problem) return problem
       }
       return { kind: 'ok', geojsonProvince: response.data }
+    }
+
+    return { kind: 'unknown', temporary: true }
+  }
+
+  // Get Regency Data
+  async getRegency(id: number): Promise<Types.GetGeojsonRegencyResult> {
+    if (this.apisauce) {
+      // make the api call
+      const response: ApiResponse<any> = await this.apisauce.get(
+        `maps/regency?id=${id}`
+      )
+
+      // the typical ways to die when calling an api
+      if (!response.ok) {
+        const problem = getGeneralApiProblem(response)
+        if (problem) return problem
+      }
+      return { kind: 'ok', geojsonRegency: response.data }
     }
 
     return { kind: 'unknown', temporary: true }

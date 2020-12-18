@@ -1,12 +1,14 @@
 import React from 'react'
+import { observer, inject } from 'mobx-react'
+import { MapStore, ProvinceProperties } from 'models/map-store'
+
+// Material UI
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import { red } from '@material-ui/core/colors'
-import { observer, inject } from 'mobx-react'
-import { MapStore } from 'models/map/map'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,26 +34,11 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface ProvinceCardStatusProps {
-  mapStore?: MapStore
+  properties: ProvinceProperties
 }
 
-type Properties = {
-  id: string
-  name: string
-  latitude: number
-  longitude: number
-  total_ticket: number
-  open_ticket: number
-  closed_ticket: number
-  total_call: number
-  total_answer: number
-  total_abandon: number
-}
-
-export function ProvinceCardStatus({ mapStore }: ProvinceCardStatusProps) {
+export function ProvinceCardStatus({ properties }: ProvinceCardStatusProps) {
   const classes = useStyles()
-  const properties: Properties = mapStore?.getProvinceMap().features[0]
-    ?.properties as Properties
 
   if (!properties)
     return (
@@ -96,4 +83,4 @@ export function ProvinceCardStatus({ mapStore }: ProvinceCardStatusProps) {
   )
 }
 
-export default inject('mapStore')(observer(ProvinceCardStatus))
+export default ProvinceCardStatus

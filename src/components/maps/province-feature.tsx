@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { GeoJSON as LeafletGeoJSON, LatLngBoundsExpression } from 'leaflet'
-import { GeoJSON, useMap } from 'react-leaflet'
+import { FeatureGroup, GeoJSON, useMap } from 'react-leaflet'
 
 export interface ProvinceFeatureProps {
   data: GeoJSON.Feature
@@ -13,21 +13,22 @@ export function ProvinceFeature({ data }: ProvinceFeatureProps) {
   useEffect(() => {
     if (geojsonRef.current) {
       // update shape
-      geojsonRef.current?.clearLayers()
-      geojsonRef.current?.addData(data)
+      // geojsonRef.current?.clearLayers()
+      // geojsonRef.current?.addData(data)
 
       // focus on shape
       const featureBounds: LatLngBoundsExpression = geojsonRef.current?.getBounds() as LatLngBoundsExpression
 
       setTimeout(() => {
         map.fitBounds(featureBounds)
-      }, 500) // waiting new data to added
+      }, 1000) // waiting new data to added
     }
   }, [data, map])
 
   return (
-    <GeoJSON ref={geojsonRef} data={data} pathOptions={{ color: '#969696a1' }}>
-      {/* <Marker
+    <FeatureGroup pathOptions={{ color: '#969696a1' }}>
+      <GeoJSON ref={geojsonRef} data={data} pathOptions={{ color: 'yellow' }}>
+        {/* <Marker
           position={
             [
               data.properties?.longitude.replace(/,/g, '.'),
@@ -35,7 +36,8 @@ export function ProvinceFeature({ data }: ProvinceFeatureProps) {
             ] as LatLngExpression
           }
         /> */}
-    </GeoJSON>
+      </GeoJSON>
+    </FeatureGroup>
   )
 }
 

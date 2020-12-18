@@ -3,10 +3,10 @@ import { inject, observer } from 'mobx-react'
 import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet'
 import { LatLngExpression } from 'leaflet'
 import { RouteComponentProps } from '@reach/router'
-import { MapStore } from 'models/map'
+import { MapStore } from 'models/map-store'
 
 import Box from '@material-ui/core/Box'
-
+import Snackbar from '@material-ui/core/Snackbar'
 import {
   Theme,
   createStyles,
@@ -16,6 +16,7 @@ import {
 
 // Components
 import Sidebar from 'components/sidebar'
+import Alert from 'components/alert'
 import { StaticHeader } from 'components/header'
 import { ProvinceFeature, RegencyFeature } from 'components/maps'
 
@@ -65,6 +66,7 @@ export interface MapsState {
   center: LatLngExpression
   expandSidebar: boolean
   selectedProvince: number
+  openSnackbar: boolean
 }
 
 @inject('mapStore')
@@ -76,19 +78,39 @@ class Maps extends React.Component<MapsProps, MapsState> {
       center: [-0.789275, 113.921327],
       expandSidebar: false,
       selectedProvince: 36,
+      openSnackbar: false,
     }
   }
   componentDidMount() {
     // fetching by province id
     const { provinceId, mapStore } = this.props
-    if (provinceId && mapStore) mapStore.setProvinceId(parseInt(provinceId))
+
+    // promp if province id is empty
+    if (!provinceId) this.setState({ openSnackbar: true })
+
+    // Get Province & Regency
+    if (provinceId && mapStore) {
+      mapStore.province.setId(parseInt(provinceId))
+      mapStore.regency.setId(parseInt(provinceId))
+    }
   }
 
   render() {
     const { mapStore } = this.props
     const { expandSidebar } = this.state
 
-    const provinceFeature = mapStore?.getProvinceMap().features[0]
+    // const provinceFeature = mapStore?.getProvinceMap().features[0]
+
+    const handleClose = (
+      event: React.SyntheticEvent | React.MouseEvent,
+      reason?: string
+    ) => {
+      if (reason === 'clickaway') {
+        return
+      }
+
+      this.setState({ openSnackbar: false })
+    }
 
     return (
       <>
@@ -111,10 +133,30 @@ class Maps extends React.Component<MapsProps, MapsState> {
 
             <ZoomControl position="bottomright" />
 
-            {provinceFeature && <ProvinceFeature data={provinceFeature} />}
-            {/* <RegencyFeature data={batenRegFeature} /> */}
+            {mapStore?.province && (
+              <ProvinceFeature
+                data={mapStore.province.getProvinceMap().features[0]}
+              />
+            )}
+
+            {mapStore?.regency && (
+              <RegencyFeature data={mapStore.regency.getRegencyMap()} />
+            )}
           </MapContainer>
         </Box>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={this.state.openSnackbar}
+          autoHideDuration={6000}
+          onClose={handleClose}
+        >
+          <Alert onClose={handleClose} severity="warning">
+            Province could not be found!
+          </Alert>
+        </Snackbar>
       </>
     )
   }

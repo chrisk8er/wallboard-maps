@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { inject, observer } from 'mobx-react'
+import { ProvinceProperties, MapStore } from 'models/map-store'
 
 // Material UI
 import Box from '@material-ui/core/Box'
@@ -28,11 +30,41 @@ const useStyles = makeStyles(
 
 interface SidebarProps {
   expand: boolean
+  mapStore?: MapStore
 }
 
-export default function Sidebar({ expand }: SidebarProps) {
+function Sidebar({ expand, mapStore }: SidebarProps) {
   const classes = useStyles()
+  // const [category, setCategory] = useState(mapStore?.province.getCategory())
+  // const [
+  //   provinceProperties,
+  //   setProvinceProperties,
+  // ] = useState<ProvinceProperties>()
   // const [expand, setExpand] = useState(true)
+
+  // useEffect(() => {
+  //   if (mapStore !== undefined) {
+  //     if (
+  //       mapStore.province.properties &&
+  //       mapStore.province.featureCollectionIsLoading
+  //     )
+  //       setProvinceProperties(mapStore.province.properties)
+  //   }
+
+  //   console.log('loading ' + mapStore?.province.featureCollectionIsLoading)
+
+  //   return () => {
+  //     // cleanup
+  //   }
+  // }, [])
+
+  // return null if map store or province properties doesn't exist
+
+  console.log(mapStore?.province.properties?.category.length)
+
+  if (!mapStore) return null
+
+  const { province } = mapStore
 
   return (
     <Box
@@ -42,11 +74,17 @@ export default function Sidebar({ expand }: SidebarProps) {
       flexDirection="column"
     >
       <Box pb={2}>
-        <ProvinceCardStatus />
+        {province.properties && (
+          <ProvinceCardStatus properties={province.properties} />
+        )}
       </Box>
-      <Box pb={2} flexGrow={1}>
-        <TicketActive />
-      </Box>
+      {province.properties && (
+        <Box pb={2} flexGrow={1}>
+          <TicketActive properties={province.properties} />
+        </Box>
+      )}
     </Box>
   )
 }
+
+export default inject('mapStore')(observer(Sidebar))

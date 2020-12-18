@@ -1,4 +1,5 @@
 import React from 'react'
+import { ProvinceProperties, CaseCategory } from 'models/map-store'
 
 // Material UI
 import Card from '@material-ui/core/Card'
@@ -16,19 +17,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export function LinearProgressWithLabel(props: { value: number }) {
+interface ActivityProgressProps extends CaseCategory {}
+
+export function ActivityProgress({ name, total, kpi }: ActivityProgressProps) {
   return (
     <>
       <Box>
-        <Typography variant="subtitle2">Title</Typography>
+        <Typography variant="subtitle2">{name}</Typography>
       </Box>
       <Box display="flex" alignItems="center">
         <Box width="100%" mr={1}>
-          <LinearProgress variant="determinate" {...props} />
+          <LinearProgress variant="determinate" value={kpi} />
         </Box>
         <Box minWidth={35}>
           <Typography variant="body2" color="textSecondary">{`${Math.round(
-            props.value
+            kpi
           )}%`}</Typography>
         </Box>
       </Box>
@@ -36,20 +39,12 @@ export function LinearProgressWithLabel(props: { value: number }) {
   )
 }
 
-export default function TicketActivity() {
-  const classes = useStyles()
-  const [progress, setProgress] = React.useState(10)
+interface TicketActivityProps {
+  properties: ProvinceProperties
+}
 
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((prevProgress) =>
-        prevProgress >= 100 ? 10 : prevProgress + 10
-      )
-    }, 800)
-    return () => {
-      clearInterval(timer)
-    }
-  }, [])
+function TicketActivity({ properties }: TicketActivityProps) {
+  const classes = useStyles()
 
   return (
     <Card className={classes.root} elevation={2}>
@@ -58,17 +53,13 @@ export default function TicketActivity() {
         titleTypographyProps={{ variant: 'subtitle1' }}
       />
       <CardContent>
-        <LinearProgressWithLabel value={progress} />
-        <LinearProgressWithLabel value={progress} />
-        <LinearProgressWithLabel value={progress} />
-        <LinearProgressWithLabel value={progress} />
-        <LinearProgressWithLabel value={progress} />
-        <LinearProgressWithLabel value={progress} />
-        <LinearProgressWithLabel value={progress} />
-        <LinearProgressWithLabel value={progress} />
-        <LinearProgressWithLabel value={progress} />
-        <LinearProgressWithLabel value={progress} />
+        {properties &&
+          properties.category.map((cat, index) => (
+            <ActivityProgress key={index} {...cat} />
+          ))}
       </CardContent>
     </Card>
   )
 }
+
+export default TicketActivity
