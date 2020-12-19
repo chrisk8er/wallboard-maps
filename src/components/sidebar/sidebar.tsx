@@ -10,6 +10,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import TicketStatus from 'components/ticket-status'
 import TicketActive from 'components/ticket-activity'
 import ProvinceCardStatus from 'components/province-status'
+import { getSnapshot } from 'mobx-state-tree'
 
 const useStyles = makeStyles(
   (theme: Theme) =>
@@ -59,10 +60,9 @@ function Sidebar({ expand, mapStore }: SidebarProps) {
   // }, [])
 
   // return null if map store or province properties doesn't exist
+  if (mapStore) console.log('mapstore', getSnapshot(mapStore))
 
-  console.log(mapStore?.province.properties?.category.length)
-
-  if (!mapStore) return null
+  if (!mapStore || !mapStore.province) return null
 
   const { province } = mapStore
 
