@@ -1,6 +1,16 @@
 import { flow, Instance, types } from 'mobx-state-tree'
 import { withEnvironment } from 'models/extentions/withEnvironment'
 import { GetGeojsonRegencyResult } from 'services/api'
+import { string } from 'mobx-state-tree/dist/internal'
+
+export interface RegencyFeature extends GeoJSON.Feature {
+  properties: RegencyProperties
+}
+
+export interface RegencyFeatureCollection
+  extends Omit<GeoJSON.FeatureCollection, 'features'> {
+  features: RegencyFeature[]
+}
 
 const CaseCategoryModel = types.model({
   name: types.string,
@@ -19,6 +29,7 @@ const RegencyPropertiesModel = types.model({
   total_call: types.number,
   total_answer: types.number,
   total_abandon: types.number,
+  color: types.string,
   category: types.optional(types.array(CaseCategoryModel), []),
 })
 
@@ -39,7 +50,7 @@ export const RegencyModel = types
       getGeojson()
     }
 
-    const setGeojson = (result: GeoJSON.FeatureCollection) => {
+    const setGeojson = (result: RegencyFeatureCollection) => {
       self.geojsonFeatureCollection = JSON.stringify(result)
       if (result.features[0].properties) {
         self.properties = result.features[0].properties as RegencyProperties
@@ -71,7 +82,7 @@ export const RegencyModel = types
     }
   })
   .views((self) => ({
-    getRegencyMap(): GeoJSON.FeatureCollection {
+    getRegencyMap(): RegencyFeatureCollection {
       return JSON.parse(self.geojsonFeatureCollection)
     },
     getCategory(): [CaseCategory] | undefined {

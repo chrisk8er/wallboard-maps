@@ -1,4 +1,5 @@
 import { GeneralApiProblem } from './api-problem'
+import { RegencyFeatureCollection } from 'models/map-store/regency'
 
 export interface User {
   id: number
@@ -22,5 +23,5 @@ export type GetGeojsonProvinceResult =
   | GeneralApiProblem
 
 export type GetGeojsonRegencyResult =
-  | { kind: 'ok'; geojsonRegency: GeoJSON.FeatureCollection }
+  | { kind: 'ok'; geojsonRegency: RegencyFeatureCollection }
   | GeneralApiProblem

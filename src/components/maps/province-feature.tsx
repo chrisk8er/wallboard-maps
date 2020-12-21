@@ -17,7 +17,7 @@ export function ProvinceFeature({ data }: ProvinceFeatureProps) {
       // geojsonRef.current?.addData(data)
 
       // focus on shape
-      const featureBounds: LatLngBoundsExpression = geojsonRef.current?.getBounds() as LatLngBoundsExpression
+      const featureBounds: LatLngBoundsExpression = geojsonRef.current.getBounds() as LatLngBoundsExpression
 
       setTimeout(() => {
         map.fitBounds(featureBounds)

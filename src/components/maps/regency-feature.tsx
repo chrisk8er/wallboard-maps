@@ -1,65 +1,82 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Feature } from 'geojson'
+import React, { useRef, useState, useEffect } from 'react'
+import { cloneDeep } from 'lodash'
 import { FeatureGroup, GeoJSON, Tooltip, useMap } from 'react-leaflet'
+import { GeoJSON as LeafletGeoJSON } from 'leaflet'
 import {
-  GeoJSON as LeafletGeoJSON,
-  LatLngBoundsExpression,
-  Layer,
-  LeafletMouseEvent,
-} from 'leaflet'
+  RegencyFeatureCollection,
+  RegencyFeature as RegencyFeatureType,
+} from 'models/map-store/regency'
 
 export interface RegencyFeatureProps {
-  data: GeoJSON.FeatureCollection
+  data: RegencyFeatureCollection
 }
 
 export function RegencyFeature({ data }: RegencyFeatureProps) {
-  const geojsonRef = useRef<LeafletGeoJSON>(null)
   const map = useMap()
+  const geojsonRef = useRef<LeafletGeoJSON>(null)
+  const [defaultFeatures] = useState(
+    cloneDeep<RegencyFeatureType[]>(data.features)
+  ) // cloneDeep is better than Object asign or spread operator
+
+  const [features, setFeatures] = useState<RegencyFeatureType[]>(data.features)
 
   useEffect(() => {
-    if (geojsonRef.current) {
-      // update shape
-      // geojsonRef.current?.clearLayers()
-      // geojsonRef.current?.addData(data)
-      // focus on shape
-      // const featureBounds: LatLngBoundsExpression = geojsonRef.current?.getBounds() as LatLngBoundsExpression
-      // setTimeout(() => {
-      //   map.fitBounds(featureBounds)
-      // }, 1000) // waiting new data to added
-    }
-  }, [data])
-
-  const onEachFeature = (feature: Feature, layer: Layer) => {
-    layer.on({
-      click: (e: LeafletMouseEvent) => {
-        // e.target.
-        // focus on clicked feature
-        map.fitBounds(e.target.getBounds())
-      },
-    })
-  }
+    console.log(geojsonRef?.current?.getLayers())
+  }, [geojsonRef])
 
   return (
     <FeatureGroup>
-      {data.features.map((feature, index) => (
-        <GeoJSON
-          key={index}
-          pathOptions={{
-            color: 'grey',
-            fillColor: feature.properties?.color,
-            fillOpacity: 0.7,
-            opacity: 1,
-            weight: 2,
-            dashArray: '3',
-          }}
-          data={feature}
-          onEachFeature={onEachFeature}
-        >
-          <Tooltip direction="right" sticky>
-            {feature.properties?.name}
-          </Tooltip>
-        </GeoJSON>
-      ))}
+      {features &&
+        features.map((feature, index) => {
+          return (
+            <GeoJSON
+              key={index}
+              pathOptions={{
+                color: 'grey',
+                fillColor: feature.properties.color,
+                fillOpacity: 0.7,
+                opacity: 1,
+                weight: 2,
+                dashArray: '3',
+              }}
+              ref={geojsonRef}
+              data={feature}
+              eventHandlers={{
+                click: (e) => {
+                  console.log(e.layer)
+
+                  let newFeatures: RegencyFeatureType[] = features.map(
+                    (feature) => {
+                      if (
+                        feature.properties?.id === e.layer.feature.properties.id
+                      ) {
+                        feature.properties.color = 'blue'
+                        return feature
+                      }
+                      defaultFeatures.forEach((defaultFeature) => {
+                        if (
+                          defaultFeature.properties.id === feature.properties.id
+                        ) {
+                          feature.properties.color =
+                            defaultFeature.properties.color
+                        }
+                      })
+
+                      return feature
+                    }
+                  )
+
+                  setFeatures(newFeatures)
+                  map.fitBounds(e.layer.getBounds())
+                },
+              }}
+            >
+              <Tooltip direction="right" sticky>
+                {feature.properties?.name}
+              </Tooltip>
+            </GeoJSON>
+          )
+        })}
     </FeatureGroup>
   )
 }
