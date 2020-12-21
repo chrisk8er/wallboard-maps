@@ -1,5 +1,6 @@
 import React from 'react'
-import { ProvinceProperties, DetailTicket } from 'models/map-store'
+import { ProvinceProperties } from 'models/map-store'
+import { DetailTicket } from 'models/map-store/detail-ticket'
 
 // Material UI
 import Card from '@material-ui/core/Card'

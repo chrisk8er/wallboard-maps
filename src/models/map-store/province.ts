@@ -1,12 +1,7 @@
 import { flow, Instance, types } from 'mobx-state-tree'
 import { withEnvironment } from 'models/extentions/withEnvironment'
 import { GetGeojsonProvinceResult } from 'services/api'
-
-const DetailTicketModel = types.model({
-  name: types.string,
-  total: types.number,
-  kpi: types.number,
-})
+import { DetailTicketModel, DetailTicket } from './detail-ticket'
 
 const ProvincePropertiesModel = types.model({
   id: types.string,
@@ -81,9 +76,8 @@ export const ProvinceModel = types
     },
   }))
 
-export type DetailTicketType = Instance<typeof DetailTicketModel>
 export type ProvincePropertiesType = Instance<typeof ProvincePropertiesModel>
 export type ProvinceType = Instance<typeof ProvinceModel>
-export interface DetailTicket extends DetailTicketType {}
+
 export interface ProvinceProperties extends ProvincePropertiesType {}
 export interface ProvinceStore extends ProvinceType {}

@@ -1,6 +1,7 @@
 import { flow, Instance, types } from 'mobx-state-tree'
 import { withEnvironment } from 'models/extentions/withEnvironment'
 import { GetGeojsonRegencyResult } from 'services/api'
+import { DetailTicketModel } from './detail-ticket'
 
 export interface RegencyFeature extends GeoJSON.Feature {
   properties: RegencyProperties
@@ -10,12 +11,6 @@ export interface RegencyFeatureCollection
   extends Omit<GeoJSON.FeatureCollection, 'features'> {
   features: RegencyFeature[]
 }
-
-const CaseCategoryModel = types.model({
-  name: types.string,
-  total: types.number,
-  kpi: types.number,
-})
 
 const RegencyPropertiesModel = types.model({
   id: types.string,
@@ -29,7 +24,7 @@ const RegencyPropertiesModel = types.model({
   total_answer: types.number,
   total_abandon: types.number,
   color: types.string,
-  category: types.optional(types.array(CaseCategoryModel), []),
+  detail_ticket: types.optional(types.array(DetailTicketModel), []),
 })
 
 export const RegencyModel = types
@@ -86,9 +81,7 @@ export const RegencyModel = types
     },
   }))
 
-export type CaseCategoryType = Instance<typeof CaseCategoryModel>
 export type RegencyPropertiesType = Instance<typeof RegencyPropertiesModel>
 export type RegencyType = Instance<typeof RegencyModel>
-export interface CaseCategory extends CaseCategoryType {}
 export interface RegencyProperties extends RegencyPropertiesType {}
 export interface RegencyStore extends RegencyType {}
