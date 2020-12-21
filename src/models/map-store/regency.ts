@@ -1,7 +1,6 @@
 import { flow, Instance, types } from 'mobx-state-tree'
 import { withEnvironment } from 'models/extentions/withEnvironment'
 import { GetGeojsonRegencyResult } from 'services/api'
-import { string } from 'mobx-state-tree/dist/internal'
 
 export interface RegencyFeature extends GeoJSON.Feature {
   properties: RegencyProperties
@@ -35,9 +34,9 @@ const RegencyPropertiesModel = types.model({
 
 export const RegencyModel = types
   .model('Regency', {
-    id: types.optional(types.number, 31),
-    properties: types.maybeNull(RegencyPropertiesModel),
-    featureCollectionIsLoading: types.optional(types.boolean, false),
+    // provinceId: types.optional(types.number, 31),
+    properties: types.array(RegencyPropertiesModel),
+    isLoading: types.optional(types.boolean, false),
     geojsonFeatureCollection: types.optional(
       types.string,
       '{\n  "type": "FeatureCollection",\n  "features": []\n}'
@@ -45,23 +44,23 @@ export const RegencyModel = types
   })
   .extend(withEnvironment)
   .actions((self) => {
-    const setId = (id: number) => {
-      self.id = id
-      getGeojson()
+    const getByProvinceId = (id: number) => {
+      getGeojson(id)
     }
 
     const setGeojson = (result: RegencyFeatureCollection) => {
       self.geojsonFeatureCollection = JSON.stringify(result)
-      if (result.features[0].properties) {
-        self.properties = result.features[0].properties as RegencyProperties
-      }
+      let newProperties: RegencyProperties[] = result.features.map(
+        (feature) => feature.properties
+      )
+      self.properties.replace(newProperties)
     }
 
-    const getGeojson = flow(function* () {
-      self.featureCollectionIsLoading = true
+    const getGeojson = flow(function* (id: number) {
+      self.isLoading = true
 
       const result: GetGeojsonRegencyResult = yield self.environment.api.getRegency(
-        self.id
+        id
       )
 
       if (result.kind === 'ok') {
@@ -72,11 +71,11 @@ export const RegencyModel = types
           console.log(result.kind)
         }
       }
-      self.featureCollectionIsLoading = false
+      self.isLoading = false
     })
 
     return {
-      setId,
+      getByProvinceId,
       setGeojson,
       getGeojson,
     }
@@ -84,14 +83,6 @@ export const RegencyModel = types
   .views((self) => ({
     getRegencyMap(): RegencyFeatureCollection {
       return JSON.parse(self.geojsonFeatureCollection)
-    },
-    getCategory(): [CaseCategory] | undefined {
-      let category = self.properties?.category
-      if (!category) {
-        return category
-      }
-
-      return undefined
     },
   }))
 

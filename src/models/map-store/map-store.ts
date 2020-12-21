@@ -9,10 +9,22 @@ import { RegencyModel } from './regency'
 //   }
 // }
 
-export const MapModel = types.model('Map').props({
-  province: types.optional(ProvinceModel, {}),
-  regency: types.optional(RegencyModel, {}),
-})
+export const MapModel = types
+  .model('Map')
+  .props({
+    province: types.optional(ProvinceModel, {}),
+    regency: types.optional(RegencyModel, {}),
+    selectedRegion: types.union(
+      types.literal('province'),
+      types.literal('regency')
+    ),
+  })
+  .actions((self) => ({
+    setSelectedRegion(selectedRegion: 'province' | 'regency') {
+      if (selectedRegion === 'province' || selectedRegion === 'regency')
+        self.selectedRegion = selectedRegion
+    },
+  }))
 
 type MapType = Instance<typeof MapModel>
 export interface MapStore extends MapType {}

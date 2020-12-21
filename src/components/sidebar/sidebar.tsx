@@ -19,7 +19,7 @@ const useStyles = makeStyles(
         position: 'absolute',
         top: theme.spacing(2),
         left: theme.spacing(2),
-        height: `calc(100% - ${theme.spacing(2)}px)`,
+        // height: `calc(100% - ${theme.spacing(2)}px)`,
         zIndex: theme.zIndex.appBar,
       },
       sidebarExpand: {
@@ -36,6 +36,8 @@ interface SidebarProps {
 
 function Sidebar({ expand, mapStore }: SidebarProps) {
   const classes = useStyles()
+  const [ticketActivityTitle, setTicketActivityTitle] = useState('')
+
   // const [category, setCategory] = useState(mapStore?.province.getCategory())
   // const [
   //   provinceProperties,
@@ -60,7 +62,16 @@ function Sidebar({ expand, mapStore }: SidebarProps) {
   // }, [])
 
   // return null if map store or province properties doesn't exist
-  if (mapStore) console.log('mapstore', getSnapshot(mapStore))
+  // if (mapStore) console.log('mapstore', getSnapshot(mapStore))
+
+  useEffect(() => {
+    if (mapStore?.selectedRegion === 'province') {
+      setTicketActivityTitle('Ticket by City/Regency')
+    } else {
+      setTicketActivityTitle('Ticket by Category')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mapStore?.selectedRegion])
 
   if (!mapStore || !mapStore.province) return null
 
@@ -79,8 +90,12 @@ function Sidebar({ expand, mapStore }: SidebarProps) {
         )}
       </Box>
       {province.properties && (
-        <Box pb={2} flexGrow={1}>
-          <TicketActive properties={province.properties} />
+        // <Box pb={2} flexGrow={1}>
+        <Box pb={2}>
+          <TicketActive
+            title={ticketActivityTitle}
+            properties={province.properties}
+          />
         </Box>
       )}
     </Box>

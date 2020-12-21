@@ -1,5 +1,5 @@
 import React from 'react'
-import { ProvinceProperties, CaseCategory } from 'models/map-store'
+import { ProvinceProperties, DetailTicket } from 'models/map-store'
 
 // Material UI
 import Card from '@material-ui/core/Card'
@@ -13,11 +13,11 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     maxWidth: 345,
-    height: '100%',
+    // height: '100%',
   },
 }))
 
-interface ActivityProgressProps extends CaseCategory {}
+interface ActivityProgressProps extends DetailTicket {}
 
 export function ActivityProgress({ name, total, kpi }: ActivityProgressProps) {
   return (
@@ -40,21 +40,22 @@ export function ActivityProgress({ name, total, kpi }: ActivityProgressProps) {
 }
 
 interface TicketActivityProps {
+  title: string
   properties: ProvinceProperties
 }
 
-function TicketActivity({ properties }: TicketActivityProps) {
+function TicketActivity({ title, properties }: TicketActivityProps) {
   const classes = useStyles()
 
   return (
     <Card className={classes.root} elevation={2}>
       <CardHeader
-        title="Ticket by Category"
+        title={title}
         titleTypographyProps={{ variant: 'subtitle1' }}
       />
       <CardContent>
         {properties &&
-          properties.category.map((cat, index) => (
+          properties.detail_ticket.map((cat, index) => (
             <ActivityProgress key={index} {...cat} />
           ))}
       </CardContent>

@@ -8,7 +8,7 @@ import { MapModel } from '../map-store'
  */
 export const RootStoreModel = types.model('RootStore').props({
   settingStore: types.optional(SettingModel, {}),
-  mapStore: types.optional(MapModel, {}),
+  mapStore: types.optional(MapModel, { selectedRegion: 'province' }),
 })
 
 /**

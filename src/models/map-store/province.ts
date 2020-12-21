@@ -2,7 +2,7 @@ import { flow, Instance, types } from 'mobx-state-tree'
 import { withEnvironment } from 'models/extentions/withEnvironment'
 import { GetGeojsonProvinceResult } from 'services/api'
 
-const CaseCategoryModel = types.model({
+const DetailTicketModel = types.model({
   name: types.string,
   total: types.number,
   kpi: types.number,
@@ -16,10 +16,7 @@ const ProvincePropertiesModel = types.model({
   total_ticket: types.number,
   open_ticket: types.number,
   closed_ticket: types.number,
-  total_call: types.number,
-  total_answer: types.number,
-  total_abandon: types.number,
-  category: types.optional(types.array(CaseCategoryModel), []),
+  detail_ticket: types.optional(types.array(DetailTicketModel), []),
 })
 
 export const ProvinceModel = types
@@ -74,19 +71,19 @@ export const ProvinceModel = types
     getProvinceMap(): GeoJSON.FeatureCollection {
       return JSON.parse(self.geojsonFeatureCollection)
     },
-    getCategory(): [CaseCategory] | undefined {
-      let category = self.properties?.category
-      if (!category) {
-        return category
+    getDetailTicket(): [DetailTicket] | undefined {
+      let detailTicket = self.properties?.detail_ticket
+      if (!detailTicket) {
+        return detailTicket
       }
 
       return undefined
     },
   }))
 
-export type CaseCategoryType = Instance<typeof CaseCategoryModel>
+export type DetailTicketType = Instance<typeof DetailTicketModel>
 export type ProvincePropertiesType = Instance<typeof ProvincePropertiesModel>
 export type ProvinceType = Instance<typeof ProvinceModel>
-export interface CaseCategory extends CaseCategoryType {}
+export interface DetailTicket extends DetailTicketType {}
 export interface ProvinceProperties extends ProvincePropertiesType {}
 export interface ProvinceStore extends ProvinceType {}

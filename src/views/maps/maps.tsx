@@ -91,7 +91,7 @@ class Maps extends React.Component<MapsProps, MapsState> {
     // Get Province & Regency
     if (provinceId && mapStore) {
       mapStore.province.setId(parseInt(provinceId))
-      mapStore.regency.setId(parseInt(provinceId))
+      mapStore.regency.getByProvinceId(parseInt(provinceId))
     }
   }
 
