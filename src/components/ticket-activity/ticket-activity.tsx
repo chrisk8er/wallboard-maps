@@ -1,5 +1,6 @@
 import React from 'react'
 import { ProvinceProperties } from 'models/map-store'
+import { RegencyProperties } from 'models/map-store'
 import { DetailTicket } from 'models/map-store/detail-ticket'
 
 // Material UI
@@ -42,7 +43,7 @@ export function ActivityProgress({ name, total, kpi }: ActivityProgressProps) {
 
 interface TicketActivityProps {
   title: string
-  properties: ProvinceProperties
+  properties: ProvinceProperties | RegencyProperties
 }
 
 function TicketActivity({ title, properties }: TicketActivityProps) {

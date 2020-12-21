@@ -13,7 +13,7 @@ export const MapModel = types
   .model('Map')
   .props({
     province: types.optional(ProvinceModel, {}),
-    regency: types.optional(RegencyModel, {}),
+    regency: types.optional(RegencyModel, { properties: {} }),
     selectedRegion: types.union(
       types.literal('province'),
       types.literal('regency')

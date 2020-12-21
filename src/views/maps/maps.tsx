@@ -95,6 +95,18 @@ class Maps extends React.Component<MapsProps, MapsState> {
     }
   }
 
+  handleRegencyClick = (layer: any) => {
+    const { mapStore } = this.props
+
+    // this.setState({ expandSidebar: true })
+
+    if (mapStore?.regency) {
+      mapStore.setSelectedRegion('regency')
+      mapStore.regency.setProperties(layer.feature.properties)
+      console.log(layer)
+    }
+  }
+
   render() {
     const { mapStore } = this.props
     const { expandSidebar } = this.state
@@ -140,7 +152,10 @@ class Maps extends React.Component<MapsProps, MapsState> {
             )}
 
             {mapStore?.regency && (
-              <RegencyFeature data={mapStore.regency.getRegencyMap()} />
+              <RegencyFeature
+                data={mapStore.regency.getRegencyMap()}
+                onFeatureClick={this.handleRegencyClick}
+              />
             )}
           </MapContainer>
         </Box>

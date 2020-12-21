@@ -3,6 +3,20 @@ import { withEnvironment } from 'models/extentions/withEnvironment'
 import { GetGeojsonRegencyResult } from 'services/api'
 import { DetailTicketModel } from './detail-ticket'
 
+const defaultProperties = {
+  id: '',
+  name: '',
+  latitude: 0,
+  longitude: 0,
+  open_ticket: 0,
+  closed_ticket: 0,
+  total_call: 0,
+  total_answer: 0,
+  total_abandon: 0,
+  color: '',
+  detail_ticket: [],
+}
+
 export interface RegencyFeature extends GeoJSON.Feature {
   properties: RegencyProperties
 }
@@ -13,24 +27,25 @@ export interface RegencyFeatureCollection
 }
 
 const RegencyPropertiesModel = types.model({
-  id: types.string,
-  name: types.string,
-  latitude: types.number,
-  longitude: types.number,
-  total_ticket: types.number,
-  open_ticket: types.number,
-  closed_ticket: types.number,
-  total_call: types.number,
-  total_answer: types.number,
-  total_abandon: types.number,
-  color: types.string,
+  id: types.optional(types.string, ''),
+  name: types.optional(types.string, ''),
+  latitude: types.maybeNull(types.number),
+  longitude: types.maybeNull(types.number),
+  total_ticket: types.maybeNull(types.number),
+  open_ticket: types.maybeNull(types.number),
+  closed_ticket: types.maybeNull(types.number),
+  total_call: types.maybeNull(types.number),
+  total_answer: types.maybeNull(types.number),
+  total_abandon: types.maybeNull(types.number),
+  color: types.optional(types.string, ''),
   detail_ticket: types.optional(types.array(DetailTicketModel), []),
 })
 
 export const RegencyModel = types
   .model('Regency', {
     // provinceId: types.optional(types.number, 31),
-    properties: types.array(RegencyPropertiesModel),
+    allProperties: types.array(RegencyPropertiesModel),
+    properties: RegencyPropertiesModel,
     isLoading: types.optional(types.boolean, false),
     geojsonFeatureCollection: types.optional(
       types.string,
@@ -48,7 +63,7 @@ export const RegencyModel = types
       let newProperties: RegencyProperties[] = result.features.map(
         (feature) => feature.properties
       )
-      self.properties.replace(newProperties)
+      self.allProperties.replace(newProperties)
     }
 
     const getGeojson = flow(function* (id: number) {
@@ -69,10 +84,15 @@ export const RegencyModel = types
       self.isLoading = false
     })
 
+    const setProperties = (properties: RegencyProperties) => {
+      self.properties = properties
+    }
+
     return {
       getByProvinceId,
       setGeojson,
       getGeojson,
+      setProperties,
     }
   })
   .views((self) => ({

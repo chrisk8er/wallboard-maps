@@ -75,7 +75,7 @@ function Sidebar({ expand, mapStore }: SidebarProps) {
 
   if (!mapStore || !mapStore.province) return null
 
-  const { province } = mapStore
+  const { province, regency, selectedRegion } = mapStore
 
   return (
     <Box
@@ -89,12 +89,22 @@ function Sidebar({ expand, mapStore }: SidebarProps) {
           <ProvinceCardStatus properties={province.properties} />
         )}
       </Box>
-      {province.properties && (
+      {selectedRegion === 'province' && province.properties && (
         // <Box pb={2} flexGrow={1}>
         <Box pb={2}>
           <TicketActive
             title={ticketActivityTitle}
             properties={province.properties}
+          />
+        </Box>
+      )}
+
+      {selectedRegion === 'regency' && regency.properties && (
+        // <Box pb={2} flexGrow={1}>
+        <Box pb={2}>
+          <TicketActive
+            title={ticketActivityTitle}
+            properties={regency.properties}
           />
         </Box>
       )}

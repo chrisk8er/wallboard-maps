@@ -6,9 +6,10 @@ import { GeoJSON as LeafletGeoJSON } from 'leaflet'
 
 export interface RegencyFeatureProps {
   data: RegencyFeatureCollection
+  onFeatureClick?: Function
 }
 
-export function RegencyFeature({ data }: RegencyFeatureProps) {
+export function RegencyFeature({ data, onFeatureClick }: RegencyFeatureProps) {
   const map = useMap()
 
   let previousFeature: LeafletGeoJSON
@@ -17,6 +18,8 @@ export function RegencyFeature({ data }: RegencyFeatureProps) {
 
   const onclick = (e: any) => {
     const layer = e.target
+
+    if (onFeatureClick) onFeatureClick(e.layer)
 
     // reset previous style
     if (previousFeature !== undefined) {
