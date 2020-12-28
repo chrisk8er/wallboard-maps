@@ -31,4 +31,5 @@ RUN yarn build
 # STEP 2
 FROM nginx:1.17.1-alpine
 COPY --from=build-step /home/node/app/build /usr/share/nginx/html
+RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d
