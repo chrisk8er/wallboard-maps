@@ -23,10 +23,10 @@ COPY --chown=node:node yarn.lock .
 #Installing app dependencies
 RUN yarn install
 
-CMD ["yarn", "build"]
-
 # Copy the rest of your app's source code from your host to your image filesystem.
 COPY --chown=node:node . .
+
+CMD ["yarn", "build"]
 
 # STEP 2
 FROM nginx:1.17.1-alpine
