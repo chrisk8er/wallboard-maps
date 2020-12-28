@@ -1,4 +1,6 @@
-FROM node:10
+# STEP 1
+
+FROM node:10 as build-step
 
 ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 
@@ -21,11 +23,11 @@ COPY --chown=node:node yarn.lock .
 #Installing app dependencies
 RUN yarn install
 
-EXPOSE 5000
-
 CMD ["yarn", "build"]
 
 # Copy the rest of your app's source code from your host to your image filesystem.
 COPY --chown=node:node . .
 
-USER node
+# STEP 2
+FROM nginx:1.17.1-alpine
+COPY --from=build-step /home/node/app/build /usr/share/nginx/html
