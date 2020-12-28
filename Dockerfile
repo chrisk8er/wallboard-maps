@@ -23,9 +23,9 @@ RUN yarn install
 
 EXPOSE 5000
 
-CMD ["yarn", "start"]
+CMD ["yarn", "build"]
 
 # Copy the rest of your app's source code from your host to your image filesystem.
-COPY --chown=node:node . .
+COPY --chown=node:node ./build .
 
 USER node
