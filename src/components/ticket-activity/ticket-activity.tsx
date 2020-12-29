@@ -11,6 +11,7 @@ import Box from '@material-ui/core/Box'
 import Typography from '@material-ui/core/Typography'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { makeStyles, Theme } from '@material-ui/core/styles'
+import { observer } from 'mobx-react'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -65,4 +66,4 @@ function TicketActivity({ title, properties }: TicketActivityProps) {
   )
 }
 
-export default TicketActivity
+export default observer(TicketActivity)

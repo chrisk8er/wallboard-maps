@@ -1,11 +1,12 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
 import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import { red } from '@material-ui/core/colors'
+import { RegencyProperties, ProvinceProperties } from 'models/map-store'
+import { observer } from 'mobx-react'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,17 +30,20 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: red[500],
   },
 }))
+interface TicketStatusProps {
+  properties: RegencyProperties | ProvinceProperties
+}
 
-export function TicketStatus() {
+export function TicketStatus({ properties }: TicketStatusProps) {
   const classes = useStyles()
 
   return (
     <Card className={classes.root} elevation={2}>
       <CardContent>
-        <Typography variant="subtitle1">Ticket Status</Typography>
+        <Typography variant="subtitle1">{properties.name}</Typography>
         <Box display="flex" alignItems="center" mt={1}>
           <Box textAlign="center">
-            <Typography variant="h3">654</Typography>
+            <Typography variant="h3">{properties.total_ticket}</Typography>
             <Typography variant="subtitle1">Tickets</Typography>
           </Box>
           <Box ml={3} width="150px">
@@ -49,7 +53,7 @@ export function TicketStatus() {
               alignContent="start"
             >
               <Typography variant="subtitle1">Open:</Typography>
-              <Typography variant="h5">54</Typography>
+              <Typography variant="h5">{properties.open_ticket}</Typography>
             </Box>
             <Box
               display="flex"
@@ -58,7 +62,7 @@ export function TicketStatus() {
               mt={1}
             >
               <Typography variant="subtitle1">Closed:</Typography>
-              <Typography variant="h5">600</Typography>
+              <Typography variant="h5">{properties.closed_ticket}</Typography>
             </Box>
           </Box>
         </Box>
@@ -67,4 +71,4 @@ export function TicketStatus() {
   )
 }
 
-export default TicketStatus
+export default observer(TicketStatus)

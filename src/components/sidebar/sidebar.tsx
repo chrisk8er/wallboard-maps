@@ -9,7 +9,6 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 // Components
 import TicketStatus from 'components/ticket-status'
 import TicketActive from 'components/ticket-activity'
-import ProvinceCardStatus from 'components/province-status'
 import { getSnapshot } from 'mobx-state-tree'
 
 const useStyles = makeStyles(
@@ -85,8 +84,11 @@ function Sidebar({ expand, mapStore }: SidebarProps) {
       flexDirection="column"
     >
       <Box pb={2}>
-        {province.properties && (
-          <ProvinceCardStatus properties={province.properties} />
+        {selectedRegion === 'province' && province.properties && (
+          <TicketStatus properties={province.properties} />
+        )}
+        {selectedRegion === 'regency' && regency.properties && (
+          <TicketStatus properties={regency.properties} />
         )}
       </Box>
       {selectedRegion === 'province' && province.properties && (

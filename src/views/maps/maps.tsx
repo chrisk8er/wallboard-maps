@@ -91,6 +91,7 @@ class Maps extends React.Component<MapsProps, MapsState> {
     // Get Province & Regency
     if (provinceId && mapStore) {
       mapStore.province.setId(parseInt(provinceId))
+      mapStore.setSelectedRegion('province')
       mapStore.regency.getByProvinceId(parseInt(provinceId))
     }
   }
@@ -103,7 +104,6 @@ class Maps extends React.Component<MapsProps, MapsState> {
     if (mapStore?.regency) {
       mapStore.setSelectedRegion('regency')
       mapStore.regency.setProperties(layer.feature.properties)
-      console.log(layer)
     }
   }
 
