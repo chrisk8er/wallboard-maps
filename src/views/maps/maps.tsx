@@ -7,6 +7,7 @@ import { MapStore } from 'models/map-store'
 
 import Box from '@material-ui/core/Box'
 import Snackbar from '@material-ui/core/Snackbar'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import {
   Theme,
   createStyles,
@@ -122,6 +123,19 @@ class Maps extends React.Component<MapsProps, MapsState> {
       }
 
       this.setState({ openSnackbar: false })
+    }
+
+    if (!mapStore || mapStore?.regency.isLoading) {
+      return (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="100%"
+        >
+          <CircularProgress />
+        </Box>
+      )
     }
 
     return (
