@@ -20,8 +20,11 @@ export function ProvinceFeature({ data }: ProvinceFeatureProps) {
       const featureBounds: LatLngBoundsExpression = geojsonRef.current.getBounds() as LatLngBoundsExpression
 
       setTimeout(() => {
-        map.fitBounds(featureBounds)
+        if (featureBounds) map.fitBounds(featureBounds)
       }, 1000) // waiting new data to added
+    }
+    return () => {
+      clearTimeout()
     }
   }, [data, map])
 
